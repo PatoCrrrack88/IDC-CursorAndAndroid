@@ -7,22 +7,18 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.ComponentActivity
-import com.google.gson.Gson
 import idc.proyecto.idc.databinding.MainviewBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Date
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import java.nio.ByteBuffer
-import kotlin.math.pow
-import kotlin.math.sqrt
-
 
 class MainActivity : ComponentActivity() {
 
@@ -39,13 +35,10 @@ class MainActivity : ComponentActivity() {
     private lateinit var sensor: Sensor
     private lateinit var sensorEventListener: SensorEventListener
 
+    private var x: Float = 0f
+    private var y: Float = 0f
     private var z: Float = 0f
-    private var acc: Float = 0f
-    private var tiempoActual: Long = 0
-    private var tiempoPrevio: Long = 0
-    private var t: Long = 0
 
-    private var sensorRegistered = true
     private var hayQueEnviar = false
 
     @SuppressLint("SetTextI18n")
@@ -60,14 +53,26 @@ class MainActivity : ComponentActivity() {
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)!!
 
 
-        var prevz = 0
+
         sensorEventListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
+                x = event.values[0]
+                y = event.values[1]
                 z = event.values[2]
+
+//                // Calculate Roll and Pitch (rotation around X-axis, rotation around Y-axis)
+//                roll = atan(y / sqrt(x.toDouble().pow(2) + z.toDouble().pow(2))) * 180 / PI
+//                pitch = atan(-1 * x / sqrt(y.toDouble().pow(2) + z.toDouble().pow(2))) * 180 / PI
+//
+//                // Low-pass filter
+//                rollF = 0.94 * rollF + 0.06 * roll
+//                pitchF = 0.94 * pitchF + 0.06 * pitch
+
                 if (hayQueEnviar){
                     CoroutineScope(Dispatchers.IO).launch {
-                        val data = z
+                        val data = floatArrayOf(x, y, z)
                         sendValues(data)
+                        Log.d("values", "${x} ${y} ${z}")
                     }
                 }
             }
@@ -98,9 +103,16 @@ class MainActivity : ComponentActivity() {
     }
 
     @Throws(Exception::class)
-    fun sendValues(data: Float) {
-        val buffer = ByteBuffer.allocate(4)
-        buffer.putFloat(data)
+    fun sendValues(data: FloatArray) {
+        val size = 4 * data.size
+        Log.d("print", "${size}, ${data.size}, ${data}")
+        val buffer = ByteBuffer.allocate(size)
+
+        for (d in data){
+            buffer.putFloat(d)
+            Log.d("inData", "${d}")
+        }
+
         val dataBytes = buffer.array()
         val packet = DatagramPacket(dataBytes, dataBytes.size, InetAddress.getByName(ip), port)
 
