@@ -50,23 +50,15 @@ class MainActivity : ComponentActivity() {
 
         /**---------------------------------------------------------------------*/
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)!!
-
-
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
+        //sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)!!
 
         sensorEventListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
+
                 x = event.values[0]
                 y = event.values[1]
                 z = event.values[2]
-
-//                // Calculate Roll and Pitch (rotation around X-axis, rotation around Y-axis)
-//                roll = atan(y / sqrt(x.toDouble().pow(2) + z.toDouble().pow(2))) * 180 / PI
-//                pitch = atan(-1 * x / sqrt(y.toDouble().pow(2) + z.toDouble().pow(2))) * 180 / PI
-//
-//                // Low-pass filter
-//                rollF = 0.94 * rollF + 0.06 * roll
-//                pitchF = 0.94 * pitchF + 0.06 * pitch
 
                 if (hayQueEnviar){
                     CoroutineScope(Dispatchers.IO).launch {
