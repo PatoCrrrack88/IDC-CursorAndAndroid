@@ -25,7 +25,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var binding: MainviewBinding
     private lateinit var urlSetter: EditText
     private lateinit var boton: Button
-    private lateinit var retry: Button
 
     private lateinit var socket : DatagramSocket
     private lateinit var ip: String
@@ -64,7 +63,6 @@ class MainActivity : ComponentActivity() {
                     CoroutineScope(Dispatchers.IO).launch {
                         val data = floatArrayOf(x, y, z)
                         sendValues(data)
-                        Log.d("values", "${x} ${y} ${z}")
                     }
                 }
             }
@@ -77,20 +75,23 @@ class MainActivity : ComponentActivity() {
 
         urlSetter = findViewById(R.id.urlSetter)
         boton = findViewById(R.id.boton)
-        retry = findViewById(R.id.retry)
 
         socket = DatagramSocket()
-
-        retry.setOnClickListener {
-            hayQueEnviar = false
-            boton.text = "CONECTAR"
-        }
 
         boton.setOnClickListener {
             ip = "" + urlSetter.text
             hayQueEnviar = !hayQueEnviar
-            if (boton.text == "PAUSAR") boton.text = "JUGAR"
-            else boton.text = "PAUSAR"
+            if (boton.text == "PAUSAR"){
+                boton.text = "JUGAR"
+                sensorManager.unregisterListener(sensorEventListener)
+                CoroutineScope(Dispatchers.IO).launch {
+                    val data = floatArrayOf(69f, 69f, 69f)
+                    sendValues(data)
+                }
+            } else {
+                boton.text = "PAUSAR"
+                sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+            }
         }
     }
 

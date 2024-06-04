@@ -4,30 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="126dp"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/urlSetter"
-            android:layout_width="272dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="20dp"
-            android:hint="Introduce la ip del host para comenzar"
-            android:inputType="text" />
-
-        <Button
-            android:id="@+id/retry"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="20dp"
-            android:text="↺"
-            android:textSize="30dp" />
-    </LinearLayout>
+    <EditText
+        android:id="@+id/urlSetter"
+        android:layout_width="366dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:hint="Introduce la ip del host para comenzar"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/boton"
