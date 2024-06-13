@@ -47,10 +47,8 @@ class MainActivity : ComponentActivity() {
         binding = MainviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        /**---------------------------------------------------------------------*/
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
-        //sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)!!
 
         sensorEventListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
@@ -71,7 +69,6 @@ class MainActivity : ComponentActivity() {
         }
 
         sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-        /**---------------------------------------------------------------------*/
 
         urlSetter = findViewById(R.id.urlSetter)
         boton = findViewById(R.id.boton)
